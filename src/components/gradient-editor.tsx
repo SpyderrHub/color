@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -22,7 +21,6 @@ export function GradientEditor() {
     setStops(prevStops => prevStops.map(s => ({ ...s, color: generateRandomColor() })));
   };
 
-  // Automatically randomize colors and angle on load (mount)
   useEffect(() => {
     randomize();
   }, []);
@@ -56,7 +54,6 @@ export function GradientEditor() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-start">
-      {/* Left Column: Preview */}
       <div className="lg:col-span-7 space-y-6">
         <GradientPreview stops={stops} angle={angle} />
         
@@ -89,7 +86,6 @@ export function GradientEditor() {
         </div>
       </div>
 
-      {/* Right Column: Controls */}
       <div className="lg:col-span-5 space-y-6 bg-white/30 backdrop-blur-xl p-6 rounded-3xl border border-white/60 shadow-xl">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-headline font-bold text-foreground">Color Stops</h2>
@@ -123,11 +119,8 @@ export function GradientEditor() {
             onClick={() => downloadGradientAsPNG(stops, angle)}
           >
             <Download className="h-5 w-5" />
-            Download PNG
+            Download Design
           </Button>
-          <p className="text-center text-[10px] text-muted-foreground mt-3 uppercase tracking-widest font-bold">
-            High Quality 2000x2000 Export
-          </p>
         </div>
       </div>
     </div>
