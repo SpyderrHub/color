@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -19,57 +20,65 @@ export function GradientPreview({ stops, angle }: GradientPreviewProps) {
         style={{ background: gradientCSS }}
       />
       
-      {/* Grain Texture Overlay for a high-end feel */}
-      <div className="absolute inset-0 opacity-[0.12] mix-blend-overlay pointer-events-none" 
+      {/* Grain Texture Overlay */}
+      <div className="absolute inset-0 opacity-[0.15] mix-blend-overlay pointer-events-none" 
            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}>
       </div>
 
-      {/* Decorative Wavy Graphics */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Organic Wave 1 - Static */}
-        <svg 
-          className="absolute -top-20 -left-20 w-[140%] h-[140%] opacity-20 blur-2xl" 
-          viewBox="0 0 100 100" 
-          preserveAspectRatio="none"
-        >
-          <path 
-            fill="white" 
-            d="M0,50 Q25,30 50,50 T100,50 L100,100 L0,100 Z" 
-          />
-        </svg>
+      {/* Central Liquid Sphere Effect - Inspired by the provided warped circular graphic */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
+          {/* SVG Filter for static warping/liquification effect */}
+          <svg className="absolute w-0 h-0">
+            <defs>
+              <filter id="liquid-warp">
+                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="4" seed="5" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="40" xChannelSelector="R" yChannelSelector="G" />
+              </filter>
+            </defs>
+          </svg>
 
-        {/* Organic Wave 2 - Static */}
-        <svg 
-          className="absolute -bottom-40 -right-40 w-[150%] h-[150%] opacity-10 blur-3xl" 
-          viewBox="0 0 100 100" 
-          preserveAspectRatio="none"
-        >
-          <path 
-            fill="black" 
-            d="M0,50 Q25,70 50,50 T100,50 L100,100 L0,100 Z" 
-          />
-        </svg>
+          {/* The Sphere Layers */}
+          <div className="relative w-full h-full rounded-full overflow-hidden shadow-[0_0_100px_rgba(255,255,255,0.2)]" 
+               style={{ filter: 'url(#liquid-warp)' }}>
+            
+            {/* Base Swirl */}
+            <div 
+              className="absolute inset-0 scale-125"
+              style={{ 
+                background: `conic-gradient(from ${angle}deg, ${stops.map(s => s.color).join(', ')})`,
+                filter: 'blur(10px) saturate(1.5) contrast(1.1)'
+              }}
+            />
+            
+            {/* Dynamic Color Highlights based on stops */}
+            <div 
+              className="absolute inset-0 opacity-60 mix-blend-screen"
+              style={{ 
+                background: `radial-gradient(circle at 30% 30%, ${stops[0].color}, transparent 60%),
+                             radial-gradient(circle at 70% 70%, ${stops[stops.length-1].color}, transparent 60%)`,
+                filter: 'blur(20px)'
+              }}
+            />
 
-        {/* Floating Geometric Orbs - Static */}
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-white/10 backdrop-blur-3xl border border-white/20 shadow-2xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 rounded-full bg-white/5 backdrop-blur-2xl border border-white/10" />
-        
-        {/* Subtle Grid Lines Overlay */}
-        <div className="absolute inset-0 opacity-[0.05]" 
-             style={{ backgroundImage: 'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)', backgroundSize: '60px 60px' }} 
-        />
+            {/* Glossy Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-black/20" />
+          </div>
 
-        {/* Framing Accents */}
-        <div className="absolute top-8 left-8 w-16 h-16 border-t border-l border-white/30" />
-        <div className="absolute bottom-8 right-8 w-16 h-16 border-b border-r border-white/30" />
-        
-        {/* Preview Typography */}
-        <div className="absolute inset-0 flex items-center justify-center">
-           <span className="text-white/10 font-black text-8xl md:text-[12rem] tracking-tighter uppercase select-none pointer-events-none italic">
-             FLOW
-           </span>
+          {/* Glass Inner Reflection */}
+          <div className="absolute inset-[10%] rounded-full border-t border-white/30 backdrop-blur-[2px] opacity-40" />
+          <div className="absolute top-[15%] left-[20%] w-[20%] h-[20%] bg-white/40 rounded-full blur-xl" />
         </div>
       </div>
+
+      {/* Subtle Grid Lines Overlay */}
+      <div className="absolute inset-0 opacity-[0.05]" 
+           style={{ backgroundImage: 'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)', backgroundSize: '60px 60px' }} 
+      />
+
+      {/* Framing Accents */}
+      <div className="absolute top-8 left-8 w-16 h-16 border-t border-l border-white/30" />
+      <div className="absolute bottom-8 right-8 w-16 h-16 border-b border-r border-white/30" />
 
       {/* CSS Snippet Bar */}
       <div className="absolute bottom-6 left-6 right-6">
