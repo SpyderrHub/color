@@ -25,18 +25,40 @@ export function GradientPreview({ stops, angle }: GradientPreviewProps) {
            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}>
       </div>
 
-      {/* Decorative Abstract Graphics */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
-        {/* Large Central Glass Circle */}
-        <div className="w-1/2 h-1/2 rounded-full bg-white/5 backdrop-blur-2xl border border-white/10 shadow-2xl animate-pulse duration-[8s]" />
-        
+      {/* Decorative Wavy Graphics */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Organic Wave 1 */}
+        <svg 
+          className="absolute -top-20 -left-20 w-[140%] h-[140%] opacity-20 blur-2xl animate-pulse duration-[10s]" 
+          viewBox="0 0 100 100" 
+          preserveAspectRatio="none"
+        >
+          <path 
+            fill="white" 
+            d="M0,50 Q25,30 50,50 T100,50 L100,100 L0,100 Z" 
+            className="animate-[wave_20s_ease-in-out_infinite]"
+          />
+        </svg>
+
+        {/* Organic Wave 2 */}
+        <svg 
+          className="absolute -bottom-40 -right-40 w-[150%] h-[150%] opacity-10 blur-3xl" 
+          viewBox="0 0 100 100" 
+          preserveAspectRatio="none"
+        >
+          <path 
+            fill="black" 
+            d="M0,50 Q25,70 50,50 T100,50 L100,100 L0,100 Z" 
+          />
+        </svg>
+
         {/* Floating Geometric Orbs */}
-        <div className="absolute top-1/4 -left-12 w-48 h-48 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 transform -rotate-12" />
-        <div className="absolute -bottom-12 -right-12 w-64 h-64 rounded-full bg-black/5 backdrop-blur-lg border border-white/5" />
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-white/10 backdrop-blur-3xl border border-white/20 shadow-2xl animate-bounce duration-[12s]" />
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 rounded-full bg-white/5 backdrop-blur-2xl border border-white/10 animate-pulse duration-[15s]" />
         
         {/* Subtle Grid Lines Overlay */}
         <div className="absolute inset-0 opacity-[0.05]" 
-             style={{ backgroundImage: 'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} 
+             style={{ backgroundImage: 'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)', backgroundSize: '60px 60px' }} 
         />
 
         {/* Framing Accents */}
@@ -45,8 +67,8 @@ export function GradientPreview({ stops, angle }: GradientPreviewProps) {
         
         {/* Preview Typography */}
         <div className="absolute inset-0 flex items-center justify-center">
-           <span className="text-white/10 font-black text-7xl md:text-9xl tracking-tighter uppercase select-none pointer-events-none">
-             Vibe
+           <span className="text-white/10 font-black text-8xl md:text-[12rem] tracking-tighter uppercase select-none pointer-events-none italic">
+             FLOW
            </span>
         </div>
       </div>
@@ -61,6 +83,13 @@ export function GradientPreview({ stops, angle }: GradientPreviewProps) {
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes wave {
+          0%, 100% { transform: translateX(-5%) rotate(0deg); }
+          50% { transform: translateX(5%) rotate(2deg); }
+        }
+      `}</style>
     </div>
   );
 }
