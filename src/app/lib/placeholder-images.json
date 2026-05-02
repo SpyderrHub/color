@@ -1,0 +1,11 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-gradient",
+      "description": "Abstract colorful linear gradient background",
+      "imageUrl": "https://picsum.photos/seed/gradient-hero/1200/800",
+      "imageHint": "abstract gradient"
+    }
+  ]
+}
