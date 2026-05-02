@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -27,20 +26,19 @@ export function GradientPreview({ stops, angle }: GradientPreviewProps) {
 
       {/* Decorative Wavy Graphics */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Organic Wave 1 */}
+        {/* Organic Wave 1 - Static */}
         <svg 
-          className="absolute -top-20 -left-20 w-[140%] h-[140%] opacity-20 blur-2xl animate-pulse duration-[10s]" 
+          className="absolute -top-20 -left-20 w-[140%] h-[140%] opacity-20 blur-2xl" 
           viewBox="0 0 100 100" 
           preserveAspectRatio="none"
         >
           <path 
             fill="white" 
             d="M0,50 Q25,30 50,50 T100,50 L100,100 L0,100 Z" 
-            className="animate-[wave_20s_ease-in-out_infinite]"
           />
         </svg>
 
-        {/* Organic Wave 2 */}
+        {/* Organic Wave 2 - Static */}
         <svg 
           className="absolute -bottom-40 -right-40 w-[150%] h-[150%] opacity-10 blur-3xl" 
           viewBox="0 0 100 100" 
@@ -52,9 +50,9 @@ export function GradientPreview({ stops, angle }: GradientPreviewProps) {
           />
         </svg>
 
-        {/* Floating Geometric Orbs */}
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-white/10 backdrop-blur-3xl border border-white/20 shadow-2xl animate-bounce duration-[12s]" />
-        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 rounded-full bg-white/5 backdrop-blur-2xl border border-white/10 animate-pulse duration-[15s]" />
+        {/* Floating Geometric Orbs - Static */}
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-white/10 backdrop-blur-3xl border border-white/20 shadow-2xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 rounded-full bg-white/5 backdrop-blur-2xl border border-white/10" />
         
         {/* Subtle Grid Lines Overlay */}
         <div className="absolute inset-0 opacity-[0.05]" 
@@ -76,20 +74,13 @@ export function GradientPreview({ stops, angle }: GradientPreviewProps) {
       {/* CSS Snippet Bar */}
       <div className="absolute bottom-6 left-6 right-6">
         <div className="bg-black/40 backdrop-blur-2xl border border-white/10 px-5 py-3 rounded-2xl text-white text-[10px] md:text-xs font-mono shadow-2xl group-hover:bg-black/60 transition-all flex items-center gap-3">
-          <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+          <div className="w-2 h-2 rounded-full bg-primary" />
           <div className="flex-1 truncate">
             <span className="opacity-50 mr-2">background:</span>
             {gradientCSS};
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes wave {
-          0%, 100% { transform: translateX(-5%) rotate(0deg); }
-          50% { transform: translateX(5%) rotate(2deg); }
-        }
-      `}</style>
     </div>
   );
 }
