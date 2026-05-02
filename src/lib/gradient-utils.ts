@@ -34,6 +34,7 @@ export async function downloadGradientAsPNG(
   const cx = width / 2;
   const cy = height / 2;
   
+  // Calculate gradient points
   const length = Math.abs(width * Math.cos(angleRad)) + Math.abs(height * Math.sin(angleRad));
   const x0 = cx - Math.cos(angleRad) * (length / 2);
   const y0 = cy - Math.sin(angleRad) * (length / 2);
@@ -49,54 +50,71 @@ export async function downloadGradientAsPNG(
     return g;
   };
 
-  // 1. Draw Background
-  ctx.fillStyle = createGradient(x0, y0, x1, y1);
+  // 1. Draw Base Background (Solid background color first to avoid transparency issues)
+  ctx.fillStyle = '#f6f3f8'; // Matches --background
   ctx.fillRect(0, 0, width, height);
 
-  // 2. Draw Subtle Grid (Technical Feel)
+  // 2. Soft Background Glow (replicating the opacity-20 blur-100px glow)
   ctx.save();
-  ctx.globalAlpha = 0.05;
-  ctx.strokeStyle = '#ffffff';
-  ctx.lineWidth = 1;
-  const step = 60;
-  for (let x = 0; x <= width; x += step) {
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, height);
-    ctx.stroke();
-  }
-  for (let y = 0; y <= height; y += step) {
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(width, y);
-    ctx.stroke();
+  ctx.globalAlpha = 0.2;
+  ctx.filter = 'blur(100px)';
+  ctx.fillStyle = createGradient(x0, y0, x1, y1);
+  ctx.fillRect(-200, -200, width + 400, height + 400);
+  ctx.restore();
+
+  // 3. Draw Dotted Grid (replicating the UI dot grid)
+  ctx.save();
+  ctx.globalAlpha = 0.08;
+  ctx.fillStyle = '#000000';
+  const dotSpacing = 64; // Scaled up for 2000x2000
+  for (let x = 0; x <= width; x += dotSpacing) {
+    for (let y = 0; y <= height; y += dotSpacing) {
+      ctx.beginPath();
+      ctx.arc(x, y, 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
   ctx.restore();
 
-  // 3. Draw The Liquid Orb
-  const orbRadius = width * 0.35;
+  // 4. Draw The Liquid Orb Area
+  const orbRadius = width * 0.375;
+  
+  // Orb Background Glow (the blur-3xl glow)
   ctx.save();
   ctx.translate(cx, cy);
-  ctx.rotate(-15 * Math.PI / 180); // Match UI rotation
+  ctx.globalAlpha = 0.3;
+  ctx.filter = 'blur(60px)';
+  ctx.fillStyle = createGradient(-orbRadius, -orbRadius, orbRadius, orbRadius);
+  ctx.beginPath();
+  ctx.arc(0, 0, orbRadius * 1.1, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  // The Main Orb
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(-15 * Math.PI / 180); // Design rotation
   
-  // Orb Glow/Shadow
-  ctx.shadowBlur = 100;
-  ctx.shadowColor = 'rgba(0,0,0,0.2)';
-  
-  // Orb Base (The Gradient)
+  // Create clipping path for the orb
   ctx.beginPath();
   ctx.arc(0, 0, orbRadius, 0, Math.PI * 2);
   ctx.clip();
   
-  // Draw the gradient inside the orb (slightly offset for "liquid" look)
-  ctx.rotate(15 * Math.PI / 180); // Reset rotation for inner gradient
+  // Draw the gradient inside (Slightly rotated back for the iridescence feel)
+  ctx.rotate(15 * Math.PI / 180);
+  // Apply a slight "warp" feel by using a custom filter if supported or just rich gradients
+  try {
+    // Attempting to match the displacement look
+    ctx.filter = 'contrast(1.1) brightness(1.05)';
+  } catch (e) {}
+
   ctx.fillStyle = createGradient(-orbRadius, -orbRadius, orbRadius, orbRadius);
-  ctx.fillRect(-orbRadius * 1.5, -orbRadius * 1.5, orbRadius * 3, orbRadius * 3);
+  ctx.fillRect(-orbRadius * 1.2, -orbRadius * 1.2, orbRadius * 2.4, orbRadius * 2.4);
   
   // Inner highlights (Glass effect)
   const highlight = ctx.createRadialGradient(
     -orbRadius * 0.3, -orbRadius * 0.3, 0,
-    -orbRadius * 0.3, -orbRadius * 0.3, orbRadius * 0.8
+    -orbRadius * 0.3, -orbRadius * 0.3, orbRadius * 0.9
   );
   highlight.addColorStop(0, 'rgba(255,255,255,0.4)');
   highlight.addColorStop(1, 'rgba(255,255,255,0)');
@@ -106,18 +124,23 @@ export async function downloadGradientAsPNG(
   // Bottom shadow highlight
   const darkHighlight = ctx.createRadialGradient(
     orbRadius * 0.4, orbRadius * 0.4, 0,
-    orbRadius * 0.4, orbRadius * 0.4, orbRadius * 0.6
+    orbRadius * 0.4, orbRadius * 0.4, orbRadius * 0.7
   );
-  darkHighlight.addColorStop(0, 'rgba(0,0,0,0.1)');
+  darkHighlight.addColorStop(0, 'rgba(0,0,0,0.15)');
   darkHighlight.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = darkHighlight;
   ctx.fillRect(-orbRadius, -orbRadius, orbRadius * 2, orbRadius * 2);
 
+  // Surface reflection
+  ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
   ctx.restore();
 
-  // Download
+  // 5. Final Download
   const link = document.createElement('a');
-  link.download = `linearhue-export-${Date.now()}.png`;
+  link.download = `linearhue-design-${Date.now()}.png`;
   link.href = canvas.toDataURL('image/png', 1.0);
   link.click();
 }
