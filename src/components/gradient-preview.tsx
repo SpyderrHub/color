@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -67,11 +68,12 @@ export function GradientPreview({ stops, angle }: GradientPreviewProps) {
         </div>
       </div>
 
-      <svg className="hidden">
+      {/* Inline SVG Filter - Not hidden to ensure canvas can access it */}
+      <svg style={{ position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }} aria-hidden="true">
         <defs>
-          <filter id="liquid-warpage">
-            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" seed="12" />
-            <feDisplacementMap in="SourceGraphic" scale="100" />
+          <filter id="liquid-warpage" colorInterpolationFilters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" seed="12" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="100" xChannelSelector="R" yChannelSelector="G" />
             <feGaussianBlur stdDeviation="0.5" />
           </filter>
         </defs>

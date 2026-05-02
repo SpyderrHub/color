@@ -1,3 +1,4 @@
+
 export type ColorStop = {
   id: string;
   color: string;
@@ -49,11 +50,11 @@ export async function downloadGradientAsPNG(
     return g;
   };
 
-  // 1. Draw Base Background (Matches background: bg-background/50)
+  // 1. Draw Base Background
   ctx.fillStyle = '#f6f3f8';
   ctx.fillRect(0, 0, size, size);
 
-  // 2. Soft Background Glow (Matches CSS: opacity-20 blur-[100px])
+  // 2. Soft Background Glow
   ctx.save();
   ctx.globalAlpha = 0.2;
   ctx.filter = 'blur(100px)';
@@ -61,11 +62,11 @@ export async function downloadGradientAsPNG(
   ctx.fillRect(-size * 0.2, -size * 0.2, size * 1.4, size * 1.4);
   ctx.restore();
 
-  // 3. Draw Dotted Grid (Proportional spacing)
+  // 3. Draw Dotted Grid
   ctx.save();
   ctx.globalAlpha = 0.03;
   ctx.fillStyle = '#000000';
-  const dotSpacing = size * (32 / 512); // Proportional to 32px on 512px view
+  const dotSpacing = size * (32 / 512);
   const dotRadius = size * (1.2 / 512);
   for (let x = 0; x <= size; x += dotSpacing) {
     for (let y = 0; y <= size; y += dotSpacing) {
@@ -77,9 +78,9 @@ export async function downloadGradientAsPNG(
   ctx.restore();
 
   // 4. Draw The Liquid Orb Area
-  const orbRadius = size * 0.375; // 75% of container width / 2
+  const orbRadius = size * 0.375;
   
-  // Orb Background Glow (Matches CSS: blur-3xl opacity-30)
+  // Orb Background Glow
   ctx.save();
   ctx.translate(cx, cy);
   ctx.globalAlpha = 0.3;
@@ -90,23 +91,30 @@ export async function downloadGradientAsPNG(
   ctx.fill();
   ctx.restore();
 
-  // The Main Orb
+  // The Main Orb with Displacement Mapping (Cloudy effect)
   ctx.save();
   ctx.translate(cx, cy);
   
-  // Clipping path for the circular orb
+  // Apply the displacement filter to the entire drawing operation of the orb
+  // This ensures the "cloudy" warped edges are captured
+  ctx.filter = 'url(#liquid-warpage) brightness(1.05) contrast(1.1)';
+  
+  // Instead of a strict circular clip, we draw the content and the filter defines the warp.
+  // We use a slightly larger drawing area to allow the displacement map to warp pixels outside the center.
+  ctx.save();
+  ctx.rotate(-15 * Math.PI / 180);
+  
+  // Draw the actual orb shape as a circle with the filter applied
+  ctx.fillStyle = createGradient(-orbRadius, -orbRadius, orbRadius, orbRadius);
   ctx.beginPath();
   ctx.arc(0, 0, orbRadius, 0, Math.PI * 2);
-  ctx.clip();
-  
-  // Draw the gradient inside with filter
-  // We use url(#liquid-warpage) if it's available in the DOM, otherwise fallback to basic filters
-  ctx.filter = 'url(#liquid-warpage) brightness(1.05) contrast(1.1)';
-  ctx.rotate(-15 * Math.PI / 180); // Design rotation
-  ctx.fillStyle = createGradient(-orbRadius, -orbRadius, orbRadius, orbRadius);
-  ctx.fillRect(-orbRadius * 1.5, -orbRadius * 1.5, orbRadius * 3, orbRadius * 3);
-  
-  // Top-Left Highlight (Matches CSS: from-white/40 blur-2xl)
+  ctx.fill();
+  ctx.restore();
+
+  // Reset filter for overlays
+  ctx.filter = 'none';
+
+  // Top-Left Highlight
   ctx.save();
   ctx.globalAlpha = 0.4;
   ctx.filter = 'blur(50px)';
@@ -114,10 +122,12 @@ export async function downloadGradientAsPNG(
   tlHighlight.addColorStop(0, '#ffffff');
   tlHighlight.addColorStop(1, 'transparent');
   ctx.fillStyle = tlHighlight;
-  ctx.fillRect(-orbRadius, -orbRadius, orbRadius * 1.2, orbRadius * 1.2);
+  ctx.beginPath();
+  ctx.arc(-orbRadius * 0.2, -orbRadius * 0.2, orbRadius * 0.6, 0, Math.PI * 2);
+  ctx.fill();
   ctx.restore();
 
-  // Bottom-Right Shadow (Matches CSS: from-black/10 blur-xl)
+  // Bottom-Right Shadow
   ctx.save();
   ctx.globalAlpha = 0.1;
   ctx.filter = 'blur(30px)';
@@ -125,7 +135,9 @@ export async function downloadGradientAsPNG(
   brShadow.addColorStop(0, '#000000');
   brShadow.addColorStop(1, 'transparent');
   ctx.fillStyle = brShadow;
-  ctx.fillRect(0, 0, orbRadius * 1.2, orbRadius * 1.2);
+  ctx.beginPath();
+  ctx.arc(orbRadius * 0.3, orbRadius * 0.3, orbRadius * 0.5, 0, Math.PI * 2);
+  ctx.fill();
   ctx.restore();
 
   // Inner border & glass shadow
