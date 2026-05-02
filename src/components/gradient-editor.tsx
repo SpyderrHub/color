@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GradientPreview } from './gradient-preview';
 import { ColorStopItem } from './color-stop-item';
 import { ColorStop, generateRandomColor, downloadGradientAsPNG } from '@/lib/gradient-utils';
@@ -16,6 +16,16 @@ export function GradientEditor() {
     { id: '2', color: '#4D4DE6', position: 100 },
   ]);
   const [angle, setAngle] = useState(135);
+
+  const randomize = () => {
+    setAngle(Math.floor(Math.random() * 360));
+    setStops(prevStops => prevStops.map(s => ({ ...s, color: generateRandomColor() })));
+  };
+
+  // Automatically randomize colors and angle on load (mount)
+  useEffect(() => {
+    randomize();
+  }, []);
 
   const addStop = () => {
     if (stops.length >= 6) return;
@@ -34,11 +44,6 @@ export function GradientEditor() {
 
   const updateStop = (id: string, updates: Partial<ColorStop>) => {
     setStops(stops.map((s) => (s.id === id ? { ...s, ...updates } : s)));
-  };
-
-  const randomize = () => {
-    setAngle(Math.floor(Math.random() * 360));
-    setStops(stops.map(s => ({ ...s, color: generateRandomColor() })));
   };
 
   const reset = () => {
