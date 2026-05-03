@@ -96,7 +96,7 @@ export async function downloadDesign(
   ctx.translate(cx, cy);
   
   // Reference the SVG filter from the DOM
-  ctx.filter = 'url(#liquid-warpage) brightness(1.05) contrast(1.1)';
+  ctx.filter = 'url(#liquid-warpage) brightness(1.1) contrast(1.15)';
   
   ctx.save();
   ctx.rotate(-15 * Math.PI / 180);
@@ -108,39 +108,11 @@ export async function downloadDesign(
   ctx.fill();
   ctx.restore();
 
-  // Reset filter for highlights
+  // Reset filter
   ctx.filter = 'none';
 
-  // Top-Left Highlight
-  ctx.save();
-  ctx.globalAlpha = 0.4;
-  ctx.filter = 'blur(40px)';
-  const tlHighlight = ctx.createLinearGradient(-orbRadius, -orbRadius, 0, 0);
-  tlHighlight.addColorStop(0, '#ffffff');
-  tlHighlight.addColorStop(1, 'transparent');
-  ctx.fillStyle = tlHighlight;
-  ctx.beginPath();
-  ctx.arc(-orbRadius * 0.2, -orbRadius * 0.2, orbRadius * 0.6, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-
-  // Inner border & glass shadow
-  ctx.save();
-  ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-  ctx.lineWidth = size * (1 / 512);
-  ctx.beginPath();
-  ctx.arc(0, 0, orbRadius, 0, Math.PI * 2);
-  ctx.stroke();
-
-  // Inset Glow
-  const insetGlow = ctx.createRadialGradient(0, 0, orbRadius * 0.85, 0, 0, orbRadius);
-  insetGlow.addColorStop(0, 'transparent');
-  insetGlow.addColorStop(1, 'rgba(255,255,255,0.15)');
-  ctx.fillStyle = insetGlow;
-  ctx.beginPath();
-  ctx.arc(0, 0, orbRadius, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
+  // Note: Circular borders, glass shadows, and top-layer highlights 
+  // have been removed to keep the shape organic and "cloudy" as requested.
 
   ctx.restore();
 

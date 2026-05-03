@@ -39,23 +39,25 @@ export function GradientPreview({ stops, angle }: GradientPreviewProps) {
         style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '32px 32px' }} 
       />
 
-      {/* Central Liquid Sphere */}
+      {/* Central Liquid Sphere Area */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative w-[75%] h-[75%]">
+          {/* Outer Glow */}
           <div 
             className="absolute inset-0 rounded-full blur-3xl opacity-30"
             style={{ background: gradientCSS }}
           />
           
+          {/* Main Cloudy Orb - Removed border and inset shadow */}
           <div 
-            className="absolute inset-0 rounded-full overflow-hidden border border-white/30 shadow-[inset_0_0_80px_rgba(255,255,255,0.2)]"
+            className="absolute inset-0 rounded-full overflow-hidden"
             style={{ 
               background: gradientCSS,
-              filter: 'url(#liquid-warpage) brightness(1.05) contrast(1.1)',
+              filter: 'url(#liquid-warpage) brightness(1.1) contrast(1.15)',
               transform: 'rotate(-15deg)'
             }}
           >
-            <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-gradient-to-br from-white/40 to-transparent rounded-full blur-2xl" />
+            {/* Subtle highlight removed to ensure cloudy focus */}
           </div>
         </div>
       </div>
