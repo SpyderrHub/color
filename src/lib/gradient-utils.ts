@@ -50,7 +50,7 @@ export async function downloadDesign(
     return g;
   };
 
-  // 1. Draw Base Background (Fill with solid color for JPEG compatibility)
+  // 1. Draw Base Background
   ctx.fillStyle = '#f6f3f8';
   ctx.fillRect(0, 0, size, size);
 
@@ -124,19 +124,6 @@ export async function downloadDesign(
   ctx.fill();
   ctx.restore();
 
-  // Bottom-Right Shadow
-  ctx.save();
-  ctx.globalAlpha = 0.1;
-  ctx.filter = 'blur(25px)';
-  const brShadow = ctx.createLinearGradient(orbRadius, orbRadius, 0, 0);
-  brShadow.addColorStop(0, '#000000');
-  brShadow.addColorStop(1, 'transparent');
-  ctx.fillStyle = brShadow;
-  ctx.beginPath();
-  ctx.arc(orbRadius * 0.3, orbRadius * 0.3, orbRadius * 0.5, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-
   // Inner border & glass shadow
   ctx.save();
   ctx.strokeStyle = 'rgba(255,255,255,0.3)';
@@ -160,6 +147,6 @@ export async function downloadDesign(
   // 5. Final Download as JPEG
   const link = document.createElement('a');
   link.download = `linearhue-design-${Date.now()}.jpg`;
-  link.href = canvas.toDataURL('image/jpeg', 0.85); // High quality but compressed JPEG
+  link.href = canvas.toDataURL('image/jpeg', 0.85);
   link.click();
 }

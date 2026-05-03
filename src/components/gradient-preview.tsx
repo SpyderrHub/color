@@ -56,7 +56,6 @@ export function GradientPreview({ stops, angle }: GradientPreviewProps) {
             }}
           >
             <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-gradient-to-br from-white/40 to-transparent rounded-full blur-2xl" />
-            <div className="absolute bottom-[5%] right-[5%] w-[40%] h-[40%] bg-gradient-to-tl from-black/10 to-transparent rounded-full blur-xl" />
           </div>
         </div>
       </div>
