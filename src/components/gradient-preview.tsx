@@ -2,7 +2,7 @@
 "use client";
 
 import React from 'react';
-import { generateGradientCSS, ColorStop, downloadGradientAsPNG } from '@/lib/gradient-utils';
+import { generateGradientCSS, ColorStop, downloadDesign } from '@/lib/gradient-utils';
 import { cn } from '@/lib/utils';
 import { Download } from 'lucide-react';
 
@@ -17,7 +17,7 @@ export function GradientPreview({ stops, angle }: GradientPreviewProps) {
   const handleDownload = (e: React.MouseEvent) => {
     // Prevent download if clicking elements inside the snippet bar
     if ((e.target as HTMLElement).closest('.snippet-bar')) return;
-    downloadGradientAsPNG(stops, angle);
+    downloadDesign(stops, angle);
   };
 
   return (
@@ -68,7 +68,7 @@ export function GradientPreview({ stops, angle }: GradientPreviewProps) {
         </div>
       </div>
 
-      {/* Inline SVG Filter - Not hidden to ensure canvas can access it */}
+      {/* Inline SVG Filter - Necessary for both preview and canvas export */}
       <svg style={{ position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }} aria-hidden="true">
         <defs>
           <filter id="liquid-warpage" colorInterpolationFilters="sRGB">

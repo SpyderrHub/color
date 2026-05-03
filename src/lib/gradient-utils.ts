@@ -18,10 +18,10 @@ export function generateRandomColor(): string {
   return `#${hex.padStart(6, '0')}`;
 }
 
-export async function downloadGradientAsPNG(
+export async function downloadDesign(
   stops: ColorStop[],
   angle: number,
-  size: number = 2000
+  size: number = 1024
 ) {
   const canvas = document.createElement('canvas');
   canvas.width = size;
@@ -50,14 +50,14 @@ export async function downloadGradientAsPNG(
     return g;
   };
 
-  // 1. Draw Base Background
+  // 1. Draw Base Background (Fill with solid color for JPEG compatibility)
   ctx.fillStyle = '#f6f3f8';
   ctx.fillRect(0, 0, size, size);
 
   // 2. Soft Background Glow
   ctx.save();
   ctx.globalAlpha = 0.2;
-  ctx.filter = 'blur(100px)';
+  ctx.filter = 'blur(80px)';
   ctx.fillStyle = createGradient(x0, y0, x1, y1);
   ctx.fillRect(-size * 0.2, -size * 0.2, size * 1.4, size * 1.4);
   ctx.restore();
@@ -84,40 +84,37 @@ export async function downloadGradientAsPNG(
   ctx.save();
   ctx.translate(cx, cy);
   ctx.globalAlpha = 0.3;
-  ctx.filter = 'blur(60px)';
+  ctx.filter = 'blur(50px)';
   ctx.fillStyle = createGradient(-orbRadius, -orbRadius, orbRadius, orbRadius);
   ctx.beginPath();
   ctx.arc(0, 0, orbRadius * 1.05, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 
-  // The Main Orb with Displacement Mapping (Cloudy effect)
+  // The Main Orb with Displacement Mapping
   ctx.save();
   ctx.translate(cx, cy);
   
-  // Apply the displacement filter to the entire drawing operation of the orb
-  // This ensures the "cloudy" warped edges are captured
+  // Reference the SVG filter from the DOM
   ctx.filter = 'url(#liquid-warpage) brightness(1.05) contrast(1.1)';
   
-  // Instead of a strict circular clip, we draw the content and the filter defines the warp.
-  // We use a slightly larger drawing area to allow the displacement map to warp pixels outside the center.
   ctx.save();
   ctx.rotate(-15 * Math.PI / 180);
   
-  // Draw the actual orb shape as a circle with the filter applied
+  // Draw orb
   ctx.fillStyle = createGradient(-orbRadius, -orbRadius, orbRadius, orbRadius);
   ctx.beginPath();
   ctx.arc(0, 0, orbRadius, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 
-  // Reset filter for overlays
+  // Reset filter for highlights
   ctx.filter = 'none';
 
   // Top-Left Highlight
   ctx.save();
   ctx.globalAlpha = 0.4;
-  ctx.filter = 'blur(50px)';
+  ctx.filter = 'blur(40px)';
   const tlHighlight = ctx.createLinearGradient(-orbRadius, -orbRadius, 0, 0);
   tlHighlight.addColorStop(0, '#ffffff');
   tlHighlight.addColorStop(1, 'transparent');
@@ -130,7 +127,7 @@ export async function downloadGradientAsPNG(
   // Bottom-Right Shadow
   ctx.save();
   ctx.globalAlpha = 0.1;
-  ctx.filter = 'blur(30px)';
+  ctx.filter = 'blur(25px)';
   const brShadow = ctx.createLinearGradient(orbRadius, orbRadius, 0, 0);
   brShadow.addColorStop(0, '#000000');
   brShadow.addColorStop(1, 'transparent');
@@ -148,10 +145,10 @@ export async function downloadGradientAsPNG(
   ctx.arc(0, 0, orbRadius, 0, Math.PI * 2);
   ctx.stroke();
 
-  // Inset Shadow Effect
+  // Inset Glow
   const insetGlow = ctx.createRadialGradient(0, 0, orbRadius * 0.85, 0, 0, orbRadius);
   insetGlow.addColorStop(0, 'transparent');
-  insetGlow.addColorStop(1, 'rgba(255,255,255,0.2)');
+  insetGlow.addColorStop(1, 'rgba(255,255,255,0.15)');
   ctx.fillStyle = insetGlow;
   ctx.beginPath();
   ctx.arc(0, 0, orbRadius, 0, Math.PI * 2);
@@ -160,9 +157,9 @@ export async function downloadGradientAsPNG(
 
   ctx.restore();
 
-  // 5. Final Download
+  // 5. Final Download as JPEG
   const link = document.createElement('a');
-  link.download = `linearhue-design-${Date.now()}.png`;
-  link.href = canvas.toDataURL('image/png', 1.0);
+  link.download = `linearhue-design-${Date.now()}.jpg`;
+  link.href = canvas.toDataURL('image/jpeg', 0.85); // High quality but compressed JPEG
   link.click();
 }

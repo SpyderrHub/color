@@ -1,9 +1,10 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
 import { GradientPreview } from './gradient-preview';
 import { ColorStopItem } from './color-stop-item';
-import { ColorStop, generateRandomColor, downloadGradientAsPNG } from '@/lib/gradient-utils';
+import { ColorStop, generateRandomColor, downloadDesign } from '@/lib/gradient-utils';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Plus, RotateCcw, Download, Sparkles } from 'lucide-react';
@@ -116,7 +117,7 @@ export function GradientEditor() {
         <div className="pt-4 border-t border-white/60">
           <Button 
             className="w-full gap-2 rounded-2xl h-12 text-lg font-bold shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
-            onClick={() => downloadGradientAsPNG(stops, angle)}
+            onClick={() => downloadDesign(stops, angle)}
           >
             <Download className="h-5 w-5" />
             Download Design
